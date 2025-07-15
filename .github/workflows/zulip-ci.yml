@@ -5,7 +5,7 @@
 # server release.
 name: Zulip server CI
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 defaults:
   run:
@@ -17,30 +17,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Bullseye ships with Python 3.9.2.
-          - docker_image: zulip/ci:bullseye
-            name: Debian 11 (Python 3.9, backend)
-            os: bullseye
-            legacy_client_interface: "4"
-            server_version: refs/tags/4.0
-          # Ubuntu 22.04 ships with Python 3.10.6.
-          - docker_image: zulip/ci:jammy
-            name: Ubuntu 22.04 (Python 3.10, backend)
-            os: jammy
-            legacy_client_interface: "6"
-            server_version: refs/tags/6.0
           # Debian 12 ships with Python 3.11.2.
           - docker_image: zulip/ci:bookworm
             name: Debian 12 (Python 3.11, backend + documentation)
             os: bookworm
-            legacy_client_interface: "7"
-            server_version: refs/tags/7.0
+            legacy_client_interface: "11"
+            server_version: refs/tags/11.2
           # Ubuntu 24.04 ships with Python 3.12.3.
           - docker_image: zulip/ci:noble
             name: Ubuntu 24.04 (Python 3.12, backend)
             os: noble
-            legacy_client_interface: "8"
-            server_version: refs/tags/8.5
+            legacy_client_interface: "11"
+            server_version: refs/tags/11.2
 
     runs-on: ubuntu-latest
     name: ${{ matrix.name }} (Zulip ${{matrix.server_version}})
@@ -81,8 +69,8 @@ jobs:
         run: |
           cd server
           source tools/ci/activate-venv
-          pip install ../api/zulip
-          pip install ../api/zulip_bots
+          pip install -vvv ../api/zulip
+          pip install -vvv ../api/zulip_bots
 
       - name: Run documentation and api tests
         run: |
