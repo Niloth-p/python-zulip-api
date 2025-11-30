@@ -28,6 +28,12 @@ def deployment_notice_destination(branch: str) -> Optional[Dict[str, str]]:
     return None
 
 
+# To utilize Zulip's global times (https://zulip.com/help/global-times),
+# uncomment the below function, and call it from format_deployment_message.
+# def get_global_time(dt_str: str) -> str:
+#     return f"<time:{datetime.strptime(dt_str, '%Y-%m-%d %H:%M:%S %z').isoformat()}>"
+
+
 # Modify this function to change how deployments are displayed
 #
 # It takes the following arguments:
@@ -39,9 +45,6 @@ def deployment_notice_destination(branch: str) -> Optional[Dict[str, str]]:
 # * commit_id = hash of the commit that triggered the deployment
 # * dep_id    = deployment id
 # * dep_time  = deployment timestamp
-#
-# To utilize Zulip's global times (https://zulip.com/help/global-times),
-# use the syntax `<time:dep_time>`.
 def format_deployment_message(
     app_name: str = "",
     url: str = "",
