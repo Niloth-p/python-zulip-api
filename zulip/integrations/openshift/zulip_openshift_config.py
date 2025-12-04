@@ -1,5 +1,8 @@
 # https://github.com/python/mypy/issues/1141
+from datetime import datetime
 from typing import Dict, Optional
+
+import zulip
 
 # Change these values to configure authentication for the plugin
 ZULIP_USER = "openshift-bot@example.com"
@@ -28,6 +31,14 @@ def deployment_notice_destination(branch: str) -> Optional[Dict[str, str]]:
     return None
 
 
+# To utilize Zulip's global times (https://zulip.com/help/global-times)
+# call this function from format_deployment_message, and use the
+# returned string in your message template.
+def get_global_time(dt_str: str) -> str:
+    dt = datetime.fromisoformat(dt_str.replace("", "T", 1))
+    return zulip.datetime_to_global_time(dt)
+
+
 # Modify this function to change how deployments are displayed
 #
 # It takes the following arguments:
@@ -39,9 +50,6 @@ def deployment_notice_destination(branch: str) -> Optional[Dict[str, str]]:
 # * commit_id = hash of the commit that triggered the deployment
 # * dep_id    = deployment id
 # * dep_time  = deployment timestamp
-#
-# To utilize Zulip's global times (https://zulip.com/help/global-times),
-# use the syntax `<time:dep_time>`.
 def format_deployment_message(
     app_name: str = "",
     url: str = "",
