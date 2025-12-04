@@ -35,6 +35,12 @@ __version__ = "0.9.1"
 # Ensure the Python version is supported
 assert sys.version_info >= (3, 6)
 
+# Patch datetime.fromisoformat for Python < 3.11
+if sys.version_info < (3, 11):
+    from backports.datetime_fromisoformat import MonkeyPatch
+
+    MonkeyPatch.patch_fromisoformat()
+
 logger = logging.getLogger(__name__)
 
 API_VERSTRING = "v1/"
